@@ -11,4 +11,5 @@ export const env = {
   GEIDEA_MERCHANT_PUBLIC_KEY: process.env.GEIDEA_MERCHANT_PUBLIC_KEY || '',
   GEIDEA_BASE_URL: process.env.GEIDEA_BASE_URL || 'https://api.merchant.geidea.net',
   FRONTEND_URL: process.env.FRONTEND_URL || 'http://localhost:3000',
+  BACKEND_URL: process.env.BACKEND_URL || 'http://localhost:5000',
 };

@@ -12,7 +12,7 @@ export const createBookingSchema = z.object({
   phone: z
     .string()
     .regex(
-      /^(\+?966|0)?5\d{8}$/,
+      /^(\+?20|0)?1[0125]\d{8}$/,
       'Invalid Egyptian phone number (e.g. 01XXXXXXXX)'
     )
     .trim(),

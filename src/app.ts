@@ -5,6 +5,7 @@ import morgan from 'morgan';
 import { env } from './config/env';
 import bookingRoutes from './routes/booking.routes';
 import paymentRoutes from './routes/payment.routes';
+import adminRoutes from './routes/admin.routes';
 import { errorHandler } from './middleware/error.middleware';
 
 const app = express();
@@ -37,6 +38,7 @@ app.get('/health', (_req, res) => {
 // All booking endpoints live under /api/bookings
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/payments', paymentRoutes);
+app.use('/api/admin/auth', adminRoutes);
 
 // ── Global Error Handler ──────────────────────────────────────────────────────
 // MUST be registered LAST — Express identifies error handlers by their 4-parameter signature

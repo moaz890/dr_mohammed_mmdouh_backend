@@ -49,10 +49,9 @@ export const getAllBookings = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    // Query params come in as strings — pass them directly; service handles undefined
     const { bookingStatus, paymentStatus, search } = req.query as {
-      bookingStatus?: string;
-      paymentStatus?: string;
+      bookingStatus?: 'pending' | 'confirmed' | 'cancelled';
+      paymentStatus?: 'pending' | 'paid' | 'failed';
       search?: string;
     };
 

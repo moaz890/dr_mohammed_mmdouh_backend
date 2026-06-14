@@ -61,3 +61,13 @@ export const updateBookingSchema = z.object({
 });
 
 export type UpdateBookingInput = z.infer<typeof updateBookingSchema>;
+
+// ---------- Admin Booking Filters (query params) ----------
+
+export const bookingFiltersSchema = z.object({
+  bookingStatus: z.enum(['pending', 'confirmed', 'cancelled']).optional(),
+  paymentStatus: z.enum(['pending', 'paid', 'failed']).optional(),
+  search: z.string().max(100, 'Search term is too long').trim().optional(),
+});
+
+export type BookingFiltersInput = z.infer<typeof bookingFiltersSchema>;

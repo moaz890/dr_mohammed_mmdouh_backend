@@ -3,6 +3,8 @@ import { geideaService } from '../services/geidea.service';
 import { Booking } from '../models/Booking';
 import { env } from '../config/env';
 
+import { CreatePaymentSessionInput } from '../validations/payment.validation';
+
 // ── Create Payment Session ──────────────────────────────────────────
 export const createPaymentSession = async (
   req: Request,
@@ -10,7 +12,7 @@ export const createPaymentSession = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const { bookingId } = req.body as { bookingId: string };
+    const { bookingId } = req.body as CreatePaymentSessionInput;
 
     // Find the booking — we need the amount and to verify it exists
     const booking = await Booking.findById(bookingId);

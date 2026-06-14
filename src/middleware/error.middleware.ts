@@ -29,6 +29,24 @@ export const errorHandler = (
     message = 'Invalid ID format';
   }
 
+  // Handle Mongoose schema validation errors
+  if (err.name === 'ValidationError') {
+    statusCode = 422;
+    message = 'Validation failed';
+  }
+
+  // Handle JWT errors that may bubble up from verifyToken
+  if (err.name === 'JsonWebTokenError' || err.name === 'TokenExpiredError') {
+    statusCode = 401;
+    message = 'Invalid or expired token';
+  }
+
+  // Handle malformed JSON body from express.json()
+  if (err instanceof SyntaxError && 'body' in err) {
+    statusCode = 400;
+    message = 'Invalid JSON payload';
+  }
+
   res.status(statusCode).json({
     success: false,
     message,

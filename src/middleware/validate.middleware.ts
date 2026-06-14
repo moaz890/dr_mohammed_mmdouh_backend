@@ -28,3 +28,27 @@ export const validate =
     req.body = result.data;
     next();
   };
+
+// Same factory pattern as validate(), but for query string parameters
+export const validateQuery =
+  (schema: ZodSchema) =>
+  (req: Request, res: Response, next: NextFunction): void => {
+    const result = schema.safeParse(req.query);
+
+    if (!result.success) {
+      const errors = result.error.issues.map((issue) => ({
+        field: issue.path.join('.'),
+        message: issue.message,
+      }));
+
+      res.status(422).json({
+        success: false,
+        message: 'Validation failed',
+        errors,
+      });
+      return;
+    }
+
+    req.query = result.data as Request['query'];
+    next();
+  };

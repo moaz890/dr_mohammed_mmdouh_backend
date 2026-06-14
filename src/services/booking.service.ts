@@ -1,5 +1,8 @@
 import { Booking, IBooking } from '../models/Booking';
-import { CreateBookingInput, UpdateBookingInput } from '../validations/booking.validation';
+import { CreateBookingInput, UpdateBookingInput, BookingFiltersInput } from '../validations/booking.validation';
+
+const escapeRegex = (value: string): string =>
+  value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 // ---------- Task 7: Create Booking ----------
 // Why: Separating creation logic here means we can call it from the payment flow too
@@ -29,11 +32,7 @@ export const getBookingById = async (id: string): Promise<IBooking | null> => {
 // ---------- Task 9: Get All Bookings (Admin) ----------
 // Supports optional filtering by status so the dashboard can filter
 // without fetching everything and filtering on the frontend (expensive)
-export const getAllBookings = async (filters: {
-  bookingStatus?: string;
-  paymentStatus?: string;
-  search?: string; // search by patient name or phone
-}): Promise<IBooking[]> => {
+export const getAllBookings = async (filters: BookingFiltersInput): Promise<IBooking[]> => {
   const query: Record<string, unknown> = {};
 
   if (filters.bookingStatus) {
@@ -45,10 +44,11 @@ export const getAllBookings = async (filters: {
   }
 
   if (filters.search) {
+    const escapedSearch = escapeRegex(filters.search);
     // $or lets us search across multiple fields with one query
     query.$or = [
-      { patientName: { $regex: filters.search, $options: 'i' } },
-      { phone: { $regex: filters.search, $options: 'i' } },
+      { patientName: { $regex: escapedSearch, $options: 'i' } },
+      { phone: { $regex: escapedSearch, $options: 'i' } },
     ];
   }
 

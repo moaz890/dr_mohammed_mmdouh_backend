@@ -5,23 +5,28 @@ import {
   handleSuccess,
   handleFailure,
 } from '../controllers/payment.controller';
+import { validate } from '../middleware/validate.middleware';
+import { paymentLimiter } from '../middleware/rateLimit.middleware';
+import { createPaymentSessionSchema } from '../validations/payment.validation';
 
 const router = Router();
 
-// Task 12: Frontend calls this right after booking is created
-// Body: { bookingId: string }
-// Returns: { checkoutUrl, sessionId }
-router.post('/create-session', createPaymentSession);
+// Frontend calls this right after booking is created
+router.post(
+  '/create-session',
+  paymentLimiter,
+  validate(createPaymentSessionSchema),
+  createPaymentSession
+);
 
-// Task 16: Geidea calls this server-to-server with payment result
-// NO auth middleware here — Geidea is an external service, not an admin user.
-// Security is handled by signature verification inside the controller itself.
+// Geidea calls this server-to-server with payment result
+// NO auth middleware — security is handled by signature verification in the controller
 router.post('/webhook', handleWebhook);
 
-// Task 14: Geidea redirects patient's browser here after successful payment
+// Geidea redirects patient's browser here after successful payment
 router.get('/success', handleSuccess);
 
-// Task 15: Geidea redirects patient's browser here after failed payment
+// Geidea redirects patient's browser here after failed payment
 router.get('/failure', handleFailure);
 
 export default router;
